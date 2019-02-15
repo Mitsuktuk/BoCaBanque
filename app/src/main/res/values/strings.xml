@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">BoCa Banque</string>
+
+    <string name="login_user">Email</string>
+    <string name="login_pw">Mot de passe</string>
+    <string name="login_connexion">Connexion</string>
+
+    <string name="infos">Informations personnelles</string>
+    <string name="exit">Déconnexion</string>
+
+    <string name="comptes">Comptes</string>
+    <string name="NFC">NFC</string>
+    <string name="transactions">Transactions</string>
+
+    <string name="compte_a_debiter">Compte à débiter</string>
+    <string name="compte_a_crediter">Compte à créditer</string>
+    <string name="montant">Montant</string>
+    <string name="button_envoyer">Envoyer</string>
+
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_mouvements">MouvementsActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+</resources>

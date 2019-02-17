@@ -33,7 +33,7 @@
             android:layout_marginTop="10dp">
 
             <Spinner
-                android:id="@+id/debiteur_spinner_services"
+                android:id="@+id/deb_int_spinner_services"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp" />
@@ -69,7 +69,7 @@
             android:layout_marginTop="10dp">
 
             <Spinner
-                android:id="@+id/crediteur_spinner_services"
+                android:id="@+id/cred_int_spinner_services"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp" />
@@ -89,12 +89,27 @@
             android:text="@string/montant"
             android:textColor="@color/pink"
             android:layout_marginTop="25dp"
-            android:textSize="15dp"/>
+            android:textSize="15dp" />
 
-        <EditText
-            android:layout_width="300dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/pink"/>
+            android:gravity="center">
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/pink"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/devise"/>
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

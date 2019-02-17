@@ -5,30 +5,34 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-public class NFCEnvoyer extends Activity {
+public class NFCEnvoyer extends AppCompatActivity {
     private NfcAdapter mNfcAdapter;
-    private TextView mTextView;
     private NdefMessage mNdefMessage;
 
     @Override
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-
         setContentView(R.layout.activity_nfcenvoyer);
-        mTextView = (TextView)findViewById(R.id.txtMessageToSend);
+
+        Toolbar tb = (Toolbar) findViewById(R.id.tb);
+        setSupportActionBar(tb);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if (mNfcAdapter != null) {
-            mTextView.setText("Tap to beam to another NFC device");
-        } else {
-            mTextView.setText("This phone is not NFC enabled.");
-        }
+        Toast.makeText(this, "Approchez vous d'un appareil" , Toast.LENGTH_SHORT).show();
 
         // create an NDEF message with two records of plain text type
         mNdefMessage = new NdefMessage(
@@ -37,6 +41,14 @@ public class NFCEnvoyer extends Activity {
                         createNewTextRecord("Second sample NDEF text record", Locale.ENGLISH, true) });
 
         mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static NdefRecord createNewTextRecord(String text, Locale locale, boolean encodeInUtf8) {

@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -24,12 +25,27 @@ public class NFCRecevoir extends AppCompatActivity {
     private PendingIntent mPendingIntent;
     private IntentFilter[] mIntentFilters;
     private String[][] mNFCTechLists;
+    private double montant;
 
     @Override
-    public void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfcrecevoir);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                montant = 0;
+            } else {
+                montant = extras.getDouble("montant");
+            }
+        } else {
+            montant = (Double) savedInstanceState.getSerializable("montant");
+        }
+
+        Toast.makeText(this, "Approchez vous d'un appareil" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, String.valueOf(montant) , Toast.LENGTH_LONG).show();
+
         mTextView = (TextView)findViewById(R.id.txtMessagesReceived);
 
         Toolbar tb = (Toolbar) findViewById(R.id.tb);

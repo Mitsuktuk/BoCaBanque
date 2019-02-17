@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    public boolean onNavigationItemSelected(final MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.nav_exit: {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -93,12 +93,11 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                menuItem.setChecked(false);
                                             }
-                                });
-
+                                });;
                                 AlertDialog dialog = builder.create();
                                 dialog.show();
-
                                 break;
                             }
                             default:
@@ -106,7 +105,6 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
                                 break;
                         }
 
-                        menuItem.setChecked(false);
                         mDrawerLayout.closeDrawers();
 
                         return true;

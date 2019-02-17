@@ -12,8 +12,13 @@
     <string name="NFC">NFC</string>
     <string name="transactions">Transactions</string>
 
+    <string name="demander">Demander</string>
+    <string name="payer">Payer</string>
+
     <string name="compte_a_debiter">Compte à débiter</string>
     <string name="compte_a_crediter">Compte à créditer</string>
+    <string name="personne_a_crediter">Personne à créditer</string>
+    <string name="devise">€</string>
     <string name="montant">Montant</string>
     <string name="button_envoyer">Envoyer</string>
 

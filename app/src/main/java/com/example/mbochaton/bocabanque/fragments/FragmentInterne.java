@@ -36,8 +36,8 @@ public class FragmentInterne extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        spinnerDebiteur = (Spinner) getView().findViewById(R.id.debiteur_spinner_services);
-        spinnerCrediteur = (Spinner) getView().findViewById(R.id.crediteur_spinner_services);
+        spinnerDebiteur = (Spinner) getView().findViewById(R.id.deb_int_spinner_services);
+        spinnerCrediteur = (Spinner) getView().findViewById(R.id.cred_int_spinner_services);
         spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDebiteur.setAdapter(spinnerAdapter);

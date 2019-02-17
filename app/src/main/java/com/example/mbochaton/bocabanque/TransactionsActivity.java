@@ -60,6 +60,12 @@ public class TransactionsActivity extends AppCompatActivity {
         TextView titreTextView = (TextView)findViewById(R.id.tv_titre);
         titreTextView.setTypeface(tf);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tb);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         tabLayout = (TabLayout)findViewById(R.id.transactions_tabs);
         viewPager = (ViewPager)findViewById(R.id.transactions_container);
 
@@ -68,12 +74,6 @@ public class TransactionsActivity extends AppCompatActivity {
         tabs_adapter.addFragment(new FragmentExterne(), "Externes");
         viewPager.setAdapter(tabs_adapter);
         tabLayout.setupWithViewPager(viewPager);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tb);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

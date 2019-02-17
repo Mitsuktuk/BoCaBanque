@@ -32,6 +32,8 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
     private CardView envoyerCard;
     private List<String> mCompteBancaireList = new ArrayList<String>();
     private long idUser;
+    private Spinner demanderSpinner;
+    private Spinner payerSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +81,17 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
 
         switch (v.getId()) {
             case R.id.recevoir_card :
-                View  demanderView = getLayoutInflater().inflate(R.layout.nfc_demander_dialog, null);
+                final View  demanderView = getLayoutInflater().inflate(R.layout.nfc_demander_dialog, null);
                 builder.setTitle("Demande de paiement");
-                Spinner demanderSpinner = (Spinner) demanderView.findViewById(R.id.spinner_dialog);
+                demanderSpinner = (Spinner) demanderView.findViewById(R.id.spinner_dialog);
                 final EditText montant = (EditText) demanderView.findViewById(R.id.montant_dialog);
-                ArrayAdapter<String> demanderAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
-                demanderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                demanderSpinner.setAdapter(demanderAdapter);
+                loadComptes(0);
                 builder.setView(demanderView);
                 builder.setPositiveButton("Valider",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                String compteCredit = demanderSpinner.getSelectedItem().toString();
                                 String montantString = montant.getText().toString();
                                 double montantDouble = 0;
                                 if (!montantString.matches("")) {
@@ -98,6 +99,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                                 }
                                 Intent i = new Intent(NFCActivity.this, NFCRecevoir.class);
                                 i.putExtra("montant", montantDouble);
+                                i.putExtra("compteDebit", compteCredit);
                                 startActivity(i);
                             }
                         });
@@ -112,10 +114,8 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
             case R.id.envoyer_card :
                 View  payerView = getLayoutInflater().inflate(R.layout.nfc_payer_dialog, null);
                 builder.setTitle("Demande de paiement");
-                Spinner payerSpinner = (Spinner) payerView.findViewById(R.id.spinner_dialog);
-                ArrayAdapter<String> payerAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
-                payerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                payerSpinner.setAdapter(payerAdapter);
+                payerSpinner = (Spinner) payerView.findViewById(R.id.spinner_dialog);
+                loadComptes(1);
                 builder.setView(payerView);
                 builder.setPositiveButton("Valider",
                         new DialogInterface.OnClickListener() {
@@ -142,7 +142,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
         dialog.show();
     }
 
-    private void loadComptes() {
+    private void loadComptes(final int cas) {
         RequestHelper.provideService().listComptes().enqueue(new Callback<List<CompteBancaire>>() {
             @Override
             public void onResponse(Call<List<CompteBancaire>> call, Response<List<CompteBancaire>> response) {
@@ -150,10 +150,24 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                     List<CompteBancaire> comptes = response.body();
 
                     for (int i = 0; i < comptes.size(); i++) {
-                        if(comptes.get(i).getIdUser() == idUser) {
+                        if (comptes.get(i).getIdUser() == idUser) {
                             mCompteBancaireList.add(comptes.get(i).getIntitule());
                         }
                     }
+
+                    switch(cas) {
+                        case 0:
+                            ArrayAdapter<String> demanderAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, mCompteBancaireList);
+                            demanderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            demanderSpinner.setAdapter(demanderAdapter);
+                            break;
+                        case 1:
+                            ArrayAdapter<String> payerAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
+                            payerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            payerSpinner.setAdapter(payerAdapter);
+                            break;
+                    }
+
                 } else {
                     Toast.makeText(NFCActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
                 }

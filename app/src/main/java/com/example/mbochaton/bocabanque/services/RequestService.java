@@ -7,19 +7,24 @@ import com.example.mbochaton.bocabanque.models.Utilisateur;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface RequestService {
-    @GET("restservice.comptebancaire")
+    @GET("restwebboca.comptebancaire")
     Call<List<CompteBancaire>> listComptes();
 
-    @GET("restservice.utilisateur")
+    @GET("restwebboca.utilisateur")
     Call<List<Utilisateur>> listUtilisateurs();
 
-    @GET("restservice.utilisateur/{id}")
+    @GET("restwebboca.utilisateur/{id}")
     Call<Utilisateur> utilisateur(@Path("id") Long id);
 
-    @GET("restservice.operationbancaire")
+    @GET("restwebboca.operationbancaire")
     Call<List<OperationBancaire>> listOperations();
+
+    @POST("restwebboca.operationbancaire")
+    Call<OperationBancaire> createOperation(@Body OperationBancaire operationBancaire);
 }

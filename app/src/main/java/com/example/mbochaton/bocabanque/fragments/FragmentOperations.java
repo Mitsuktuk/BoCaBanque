@@ -43,7 +43,6 @@ public class FragmentOperations extends Fragment {
         lvMouvements.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                Toast.makeText(getActivity().getApplicationContext(), "Numéro transaction = " + arg1.getTag(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mbochaton.bocabanque.adapters.CompteBancaireListAdapter;
 import com.example.mbochaton.bocabanque.adapters.TransactionListAdapter;
 import com.example.mbochaton.bocabanque.adapters.ViewPagerAdapter;
 import com.example.mbochaton.bocabanque.fragments.FragmentOperations;
@@ -67,18 +68,8 @@ public class MouvementsActivity extends AppCompatActivity {
         viewPager = (ViewPager)findViewById(R.id.container);
 
         mOperationBancaireList = new ArrayList<>();
-        /*if(compteBancaire.getId() == 1){
-            mOperationBancaireList.add(new OperationBancaire(1,"Pepe Joe",-22.5, Calendar.getInstance().getTime(), 2));
-            mOperationBancaireList.add(new OperationBancaire(2,"Intermarché",-94.4, Calendar.getInstance().getTime(),1));
-            mOperationBancaireList.add(new OperationBancaire(3,"Mcdonalds",-31.4, Calendar.getInstance().getTime(), 2));
-            mOperationBancaireList.add(new OperationBancaire(4,"Vol Emirates",1050, Calendar.getInstance().getTime(), 3));
-        }*/
 
-        ViewPagerAdapter tabs_adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        tabs_adapter.addFragment(new FragmentOperations(mOperationBancaireList), "Opérations");
-        tabs_adapter.addFragment(new FragmentStatistiques(), "Statistiques");
-        viewPager.setAdapter(tabs_adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        loadOperations();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tb);
         setSupportActionBar(toolbar);
@@ -96,33 +87,28 @@ public class MouvementsActivity extends AppCompatActivity {
     }
 
     private void loadOperations() {
-        RequestHelper.provideService().listComptes().enqueue(new Callback<List<CompteBancaire>>() {
+        RequestHelper.provideService().listOperations().enqueue(new Callback<List<OperationBancaire>>() {
             @Override
-            public void onResponse(Call<List<CompteBancaire>> call, Response<List<CompteBancaire>> response) {
+            public void onResponse(Call<List<OperationBancaire>> call, Response<List<OperationBancaire>> response) {
                 if(response.isSuccessful()) {
-                    List<CompteBancaire> comptes = response.body();
-                    CompteBancaire compte = null;
+                    List<OperationBancaire> operations = response.body();
 
-                    for (int i = 0; i < comptes.size(); i++) {
-                        if(comptes.get(i).getId() == idCompteBancaire) {
-                            compte = comptes.get(i);
-                            break;
+                    for (int i = 0; i < operations.size(); i++) {
+                        if(operations.get(i).getIdcompte() == idCompteBancaire) {
+                            mOperationBancaireList.add(operations.get(i));
                         }
                     }
-                    /*if (compte != null) {
-                        compte.getOperationbancaireCollection();
-                    }*/
 
-
-                    //adapter = new CompteBancaireListAdapter(getApplicationContext(), mCompteBancaireList);
-                    //lvComptes.setAdapter(adapter);
-                } else {
-                    Toast.makeText(MouvementsActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
+                    ViewPagerAdapter tabs_adapter = new ViewPagerAdapter(getSupportFragmentManager());
+                    tabs_adapter.addFragment(new FragmentOperations(mOperationBancaireList), "Opérations");
+                    tabs_adapter.addFragment(new FragmentStatistiques(), "Statistiques");
+                    viewPager.setAdapter(tabs_adapter);
+                    tabLayout.setupWithViewPager(viewPager);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<CompteBancaire>> call, Throwable t) {
+            public void onFailure(Call<List<OperationBancaire>> call, Throwable t) {
                 Toast.makeText(MouvementsActivity.this, "La requête a échoué", Toast.LENGTH_LONG).show();
             }
         });

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +26,8 @@ import retrofit2.Response;
 
 public class ComptesActivity extends AppCompatActivity {
     private ListView lvComptes;
-    private CompteBancaireListAdapter adapter;
-    private List<CompteBancaire> mCompteBancaireList;
+    private CompteBancaireListAdapter adapter, refreshAdapter;
+    private List<CompteBancaire> mCompteBancaireList, refreshList;
     public Intent i;
     private long idUser;
 
@@ -59,6 +60,7 @@ public class ComptesActivity extends AppCompatActivity {
         lvComptes = (ListView) findViewById(R.id.listview_comptes);
 
         mCompteBancaireList = new ArrayList<>();
+        refreshList = new ArrayList<>();
         loadComptes();
 
         lvComptes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -93,11 +95,8 @@ public class ComptesActivity extends AppCompatActivity {
                             mCompteBancaireList.add(comptes.get(i));
                         }
                     }
-
                     adapter = new CompteBancaireListAdapter(getApplicationContext(), mCompteBancaireList);
                     lvComptes.setAdapter(adapter);
-                } else {
-                    Toast.makeText(ComptesActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
                 }
             }
 

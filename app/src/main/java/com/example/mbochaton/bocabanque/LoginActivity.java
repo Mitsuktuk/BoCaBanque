@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
                 }
             }
 
-            if(user != null) {
+            if(user != null && !user.getEmail().equals("admin")) {
                 if(user.getMdp().equals(passText)) {
                     Intent i = new Intent(this, HomeActivity.class);
                     i.putExtra("idUser", user.getId());

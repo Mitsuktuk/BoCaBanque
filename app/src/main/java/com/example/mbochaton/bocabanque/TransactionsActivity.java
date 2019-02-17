@@ -62,17 +62,17 @@ public class TransactionsActivity extends AppCompatActivity {
         TextView titreTextView = (TextView)findViewById(R.id.tv_titre);
         titreTextView.setTypeface(tf);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tb);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         tabLayout = (TabLayout)findViewById(R.id.transactions_tabs);
         viewPager = (ViewPager)findViewById(R.id.transactions_container);
         tabs_adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         loadComptes();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tb);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -115,12 +115,12 @@ public class TransactionsActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     List<Utilisateur> utilisateurs = response.body();
                     for (int i = 0; i < utilisateurs.size(); i++) {
-                        if(utilisateurs.get(i).getId() != idUser || utilisateurs.get(i).getEmail() != "admin") {
+                        if(utilisateurs.get(i).getId() != idUser && !utilisateurs.get(i).getEmail().equals("admin")) {
                             mUtilisateurList.add(utilisateurs.get(i).getPrenom() + " " + utilisateurs.get(i).getNom());
                         }
                     }
-                    tabs_adapter.addFragment(new FragmentInterne(mCompteBancaireList), "Internes");
-                    tabs_adapter.addFragment(new FragmentExterne(mCompteBancaireList, mUtilisateurList), "Externes");
+                    tabs_adapter.addFragment(new FragmentInterne(mCompteBancaireList, idUser), "Internes");
+                    tabs_adapter.addFragment(new FragmentExterne(mCompteBancaireList, mUtilisateurList, idUser), "Externes");
                     viewPager.setAdapter(tabs_adapter);
                     tabLayout.setupWithViewPager(viewPager);
                 } else {

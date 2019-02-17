@@ -10,14 +10,11 @@ public class OperationBancaire {
     private double montant;
     @SerializedName("dateoperation")
     private Date date;
+    @SerializedName("typeoperation")
     private int type;
+    private long idcompte;
 
-    public OperationBancaire(long id, String description, double montant, Date date, int type) {
-        this.id = id;
-        this.description = description;
-        this.montant = montant;
-        this.date = date;
-        this.type = type;
+    public OperationBancaire() {
     }
 
     public long getId() {
@@ -58,5 +55,13 @@ public class OperationBancaire {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public long getIdcompte() {
+        return idcompte;
+    }
+
+    public void setIdcompte(long idcompte) {
+        this.idcompte = idcompte;
     }
 }

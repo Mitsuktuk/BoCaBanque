@@ -15,15 +15,39 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.mbochaton.bocabanque.models.CompteBancaire;
+import com.example.mbochaton.bocabanque.services.RequestHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NFCActivity extends AppCompatActivity implements CardView.OnClickListener {
     private CardView recevoirCard;
     private CardView envoyerCard;
+    private List<String> mCompteBancaireList = new ArrayList<String>();
+    private long idUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                idUser = 0;
+            } else {
+                idUser = extras.getLong("idUser");
+            }
+        } else {
+            idUser = (Long)savedInstanceState.getSerializable("idUser");
+        }
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Krub-Regular.ttf");
         TextView tv = (TextView) findViewById(R.id.tv_titre);
@@ -117,4 +141,29 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void loadComptes() {
+        RequestHelper.provideService().listComptes().enqueue(new Callback<List<CompteBancaire>>() {
+            @Override
+            public void onResponse(Call<List<CompteBancaire>> call, Response<List<CompteBancaire>> response) {
+                if(response.isSuccessful()) {
+                    List<CompteBancaire> comptes = response.body();
+
+                    for (int i = 0; i < comptes.size(); i++) {
+                        if(comptes.get(i).getIdUser() == idUser) {
+                            mCompteBancaireList.add(comptes.get(i).getIntitule());
+                        }
+                    }
+                } else {
+                    Toast.makeText(NFCActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CompteBancaire>> call, Throwable t) {
+                Toast.makeText(NFCActivity.this, "La requête a échoué", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

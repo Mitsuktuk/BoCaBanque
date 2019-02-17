@@ -8,14 +8,18 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public interface RequestService {
-    @GET("restful.comptebancaire")
+    @GET("restservice.comptebancaire")
     Call<List<CompteBancaire>> listComptes();
 
-    @GET("restful.utilisateur")
+    @GET("restservice.utilisateur")
     Call<List<Utilisateur>> listUtilisateurs();
 
-    @GET("restful.operationbancaire")
+    @GET("restservice.utilisateur/{id}")
+    Call<Utilisateur> utilisateur(@Path("id") Long id);
+
+    @GET("restservice.operationbancaire")
     Call<List<OperationBancaire>> listOperations();
 }

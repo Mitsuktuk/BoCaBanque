@@ -18,13 +18,16 @@ import java.util.List;
 public class FragmentExterne extends Fragment {
     Spinner spinnerDebiteur;
     Spinner spinnerCrediteur;
-    List<String> list  = new ArrayList<>();
-    ArrayAdapter<String> spinnerAdapter;
+    ArrayAdapter<String> spinnerAdapterDeb;
+    ArrayAdapter<String> spinnerAdapterCred;
+    List<String> comptes = new ArrayList<>();
+    List<String> utilisateurs = new ArrayList<>();
 
     View view;
 
-    public FragmentExterne() {
-
+    public FragmentExterne(List<String> comptes, List<String> utilisateurs) {
+        this.comptes.addAll(comptes);
+        this.utilisateurs.addAll(utilisateurs);
     }
 
     @Nullable
@@ -40,10 +43,12 @@ public class FragmentExterne extends Fragment {
 
         spinnerDebiteur = (Spinner) getView().findViewById(R.id.deb_ext_spinner_services);
         spinnerCrediteur = (Spinner) getView().findViewById(R.id.cred_ext_spinner_services);
-        spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDebiteur.setAdapter(spinnerAdapter);
-        spinnerCrediteur.setAdapter(spinnerAdapter);
+        spinnerAdapterDeb = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
+        spinnerAdapterDeb.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapterCred = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
+        spinnerAdapterCred.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDebiteur.setAdapter(spinnerAdapterDeb);
+        spinnerCrediteur.setAdapter(spinnerAdapterCred);
 
         spinnerDebiteur.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -69,13 +74,9 @@ public class FragmentExterne extends Fragment {
             }
         });
 
-        list.add("Sparta");
-        list.add("Coder");
-        list.add("Healthy");
-        list.add("Android");
-        list.add("Developer");
-
-        spinnerAdapter.addAll(list);
-        spinnerAdapter.notifyDataSetChanged();
+        spinnerAdapterDeb.addAll(comptes);
+        spinnerAdapterDeb.notifyDataSetChanged();
+        spinnerAdapterCred.addAll(utilisateurs);
+        spinnerAdapterCred.notifyDataSetChanged();
     }
 }

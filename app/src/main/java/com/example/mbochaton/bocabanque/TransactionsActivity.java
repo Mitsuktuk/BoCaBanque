@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mbochaton.bocabanque.adapters.CompteBancaireListAdapter;
 import com.example.mbochaton.bocabanque.adapters.TransactionListAdapter;
 import com.example.mbochaton.bocabanque.adapters.ViewPagerAdapter;
 import com.example.mbochaton.bocabanque.fragments.FragmentExterne;
@@ -21,6 +22,7 @@ import com.example.mbochaton.bocabanque.fragments.FragmentOperations;
 import com.example.mbochaton.bocabanque.fragments.FragmentStatistiques;
 import com.example.mbochaton.bocabanque.models.CompteBancaire;
 import com.example.mbochaton.bocabanque.models.OperationBancaire;
+import com.example.mbochaton.bocabanque.models.Utilisateur;
 import com.example.mbochaton.bocabanque.services.RequestHelper;
 
 import java.util.ArrayList;
@@ -33,10 +35,10 @@ import retrofit2.Response;
 public class TransactionsActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ViewPagerAdapter tabs_adapter;
 
-    private ListView lvTransactions;
-    private TransactionListAdapter adapter;
-    private List<OperationBancaire> mOperationBancaireList;
+    private List<String> mCompteBancaireList = new ArrayList<>();
+    private List<String> mUtilisateurList = new ArrayList<>();
 
     private long idUser;
 
@@ -50,10 +52,10 @@ public class TransactionsActivity extends AppCompatActivity {
             if(extras == null) {
                 idUser = 0;
             } else {
-                idUser = extras.getLong("idCompteBancaire");
+                idUser = extras.getLong("idUser");
             }
         } else {
-            idUser = (Long)savedInstanceState.getSerializable("idCompteBancaire");
+            idUser = (Long)savedInstanceState.getSerializable("idUser");
         }
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Krub-Regular.ttf");
@@ -68,12 +70,9 @@ public class TransactionsActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout)findViewById(R.id.transactions_tabs);
         viewPager = (ViewPager)findViewById(R.id.transactions_container);
+        tabs_adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        ViewPagerAdapter tabs_adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        tabs_adapter.addFragment(new FragmentInterne(), "Internes");
-        tabs_adapter.addFragment(new FragmentExterne(), "Externes");
-        viewPager.setAdapter(tabs_adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        loadComptes();
     }
 
     @Override
@@ -82,5 +81,57 @@ public class TransactionsActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadComptes() {
+        RequestHelper.provideService().listComptes().enqueue(new Callback<List<CompteBancaire>>() {
+            @Override
+            public void onResponse(Call<List<CompteBancaire>> call, Response<List<CompteBancaire>> response) {
+                if(response.isSuccessful()) {
+                    List<CompteBancaire> comptes = response.body();
+
+                    for (int i = 0; i < comptes.size(); i++) {
+                        if(comptes.get(i).getIdUser() == idUser) {
+                            mCompteBancaireList.add(comptes.get(i).getIntitule());
+                        }
+                    }
+                    loadUtilisateurs();
+                } else {
+                    Toast.makeText(TransactionsActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CompteBancaire>> call, Throwable t) {
+                Toast.makeText(TransactionsActivity.this, "La requête a échoué", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadUtilisateurs() {
+        RequestHelper.provideService().listUtilisateurs().enqueue(new Callback<List<Utilisateur>>() {
+            @Override
+            public void onResponse(Call<List<Utilisateur>> call, Response<List<Utilisateur>> response) {
+                if(response.isSuccessful()) {
+                    List<Utilisateur> utilisateurs = response.body();
+                    for (int i = 0; i < utilisateurs.size(); i++) {
+                        if(utilisateurs.get(i).getId() != idUser || utilisateurs.get(i).getEmail() != "admin") {
+                            mUtilisateurList.add(utilisateurs.get(i).getPrenom() + " " + utilisateurs.get(i).getNom());
+                        }
+                    }
+                    tabs_adapter.addFragment(new FragmentInterne(mCompteBancaireList), "Internes");
+                    tabs_adapter.addFragment(new FragmentExterne(mCompteBancaireList, mUtilisateurList), "Externes");
+                    viewPager.setAdapter(tabs_adapter);
+                    tabLayout.setupWithViewPager(viewPager);
+                } else {
+                    Toast.makeText(TransactionsActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Utilisateur>> call, Throwable t) {
+                Toast.makeText(TransactionsActivity.this, "La requête a échoué", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

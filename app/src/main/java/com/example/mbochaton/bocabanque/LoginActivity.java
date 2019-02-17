@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
         passEditText = (EditText)findViewById(R.id.passText);
 
         utilisateursList = new ArrayList<>();
-        //loadUtilisateurs();
+        loadUtilisateurs();
 
         loginCard = (CardView)findViewById(R.id.login_card);
         loginCard.setOnClickListener(this);
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
         loginText = loginEditText.getText().toString();
         passText = passEditText.getText().toString();
 
-        /*if(!utilisateursList.isEmpty() || !loginText.isEmpty() || !passText.isEmpty()) {
+        if(!utilisateursList.isEmpty() || !loginText.isEmpty() || !passText.isEmpty()) {
             for (int i = 0; i < utilisateursList.size(); i++) {
                 if(utilisateursList.get(i).getEmail().equals(loginText)) {
                     user = utilisateursList.get(i);
@@ -66,18 +66,15 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
             if(user != null) {
                 if(user.getMdp().equals(passText)) {
                     Intent i = new Intent(this, HomeActivity.class);
-                    i.putExtra("prenom", user.getPrenom());
-                    i.putExtra("nom", user.getNom());
                     i.putExtra("idUser", user.getId());
                     startActivity(i);
                 }
+            } else {
+                Toast.makeText(LoginActivity.this, "Identifiants invalides", Toast.LENGTH_SHORT).show();
             }
-        }*/
-        Intent i = new Intent(this, HomeActivity.class);
-        i.putExtra("prenom", "yo");
-        i.putExtra("nom", "yo");
-        i.putExtra("idUser", 2);
-        startActivity(i);
+        } else {
+            Toast.makeText(LoginActivity.this, "Identifiants invalides", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadUtilisateurs() {
@@ -87,7 +84,6 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
                 if(response.isSuccessful()) {
                     List<Utilisateur> utilisateurs = response.body();
                     utilisateursList.addAll(utilisateurs);
-                    Toast.makeText(LoginActivity.this, utilisateurs.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
                 }

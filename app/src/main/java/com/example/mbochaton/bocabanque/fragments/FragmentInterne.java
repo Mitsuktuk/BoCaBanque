@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.mbochaton.bocabanque.R;
+import com.example.mbochaton.bocabanque.models.CompteBancaire;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ import java.util.List;
 public class FragmentInterne extends Fragment {
     Spinner spinnerDebiteur;
     Spinner spinnerCrediteur;
-    List<String> list  = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
+    List<String> comptes = new ArrayList<>();
 
     View view;
 
-    public FragmentInterne() {    }
+    public FragmentInterne(List<String> comptes) { this.comptes.addAll(comptes); }
 
     @Nullable
     @Override
@@ -67,13 +68,7 @@ public class FragmentInterne extends Fragment {
             }
         });
 
-        list.add("Sparta");
-        list.add("Coder");
-        list.add("Healthy");
-        list.add("Android");
-        list.add("Developer");
-
-        spinnerAdapter.addAll(list);
+        spinnerAdapter.addAll(comptes);
         spinnerAdapter.notifyDataSetChanged();
     }
 }

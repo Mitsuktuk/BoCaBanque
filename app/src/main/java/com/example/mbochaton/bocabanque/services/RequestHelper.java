@@ -33,7 +33,7 @@ public class RequestHelper {
         });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.43.71:8080/WebServiceBoca/webresources/")
+                .baseUrl("http://192.168.43.71:8080/RestBoca/webresources/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();

@@ -14,18 +14,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mbochaton.bocabanque.models.CompteBancaire;
 import com.example.mbochaton.bocabanque.models.Utilisateur;
+import com.example.mbochaton.bocabanque.services.RequestHelper;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity implements CardView.OnClickListener {
     private CardView comptesCard;
     private CardView nfcCard;
     private CardView transactionsCard;
     private DrawerLayout mDrawerLayout;
-    private String prenom;
-    private String nom;
     private long idUser;
+    private Utilisateur user;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +43,15 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                prenom = null;
-                nom = null;
                 idUser = 0;
             } else {
-                prenom = extras.getString("prenom");
-                nom = extras.getString("nom");
                 idUser = extras.getLong("idUser");
             }
         } else {
-            prenom = (String) savedInstanceState.getSerializable("prenom");
-            nom = (String) savedInstanceState.getSerializable("nom");
             idUser = (Long) savedInstanceState.getSerializable("idUser");
         }
+
+        loadUtilisateur();
 
         comptesCard = (CardView)findViewById(R.id.comptes_card);
         comptesCard.setOnClickListener(this);
@@ -67,10 +71,7 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
 
         mDrawerLayout = findViewById(R.id.activity_home);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        TextView navIdentity = (TextView) headerView.findViewById(R.id.identity);
-        navIdentity.setText(prenom + " " + nom);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -123,6 +124,7 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
                 break;
             case R.id.nfc_card :
                 i = new Intent(this, NFCActivity.class);
+                i.putExtra("idUser", idUser);
                 break;
             case R.id.transactions_card :
                 i = new Intent(this, TransactionsActivity.class);
@@ -144,5 +146,28 @@ public class HomeActivity extends AppCompatActivity implements CardView.OnClickL
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadUtilisateur() {
+        RequestHelper.provideService().utilisateur(idUser).enqueue(new Callback<Utilisateur>() {
+            @Override
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                if(response.isSuccessful()) {
+                    user = response.body();
+                    View headerView = navigationView.getHeaderView(0);
+                    TextView navIdentity = (TextView) headerView.findViewById(R.id.identity);
+                    TextView navMail = (TextView) headerView.findViewById(R.id.mail);
+                    navIdentity.setText(user.getPrenom() + " " + user.getNom());
+                    navMail.setText(user.getEmail());
+                } else {
+                    Toast.makeText(HomeActivity.this, "La requête a atteint le serveur, mais on s'est pris un " + response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "La requête a échoué", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

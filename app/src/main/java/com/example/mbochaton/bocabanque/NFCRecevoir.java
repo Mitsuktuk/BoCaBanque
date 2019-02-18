@@ -43,10 +43,10 @@ public class NFCRecevoir extends AppCompatActivity {
             montant = (Double) savedInstanceState.getSerializable("montant");
         }
 
-        Toast.makeText(this, "Approchez vous d'un appareil" , Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, String.valueOf(montant) , Toast.LENGTH_LONG).show();
 
-        mTextView = (TextView)findViewById(R.id.txtMessagesReceived);
+        //Toast.makeText(this, String.valueOf(montant) , Toast.LENGTH_LONG).show();
+
+        //mTextView = (TextView)findViewById(R.id.txtMessagesReceived);
 
         Toolbar tb = (Toolbar) findViewById(R.id.tb);
         setSupportActionBar(tb);
@@ -57,9 +57,9 @@ public class NFCRecevoir extends AppCompatActivity {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (mNfcAdapter != null) {
-            mTextView.setText("Read an NFC tag");
+            Toast.makeText(this, "Approchez vous d'un appareil" , Toast.LENGTH_SHORT).show();
         } else {
-            mTextView.setText("This phone is not NFC enabled.");
+            Toast.makeText(this, "Pas de NFC" , Toast.LENGTH_SHORT).show();
         }
 
         // create an intent with tag data and deliver to this activity
@@ -117,7 +117,7 @@ public class NFCRecevoir extends AppCompatActivity {
             }
         }
 
-        mTextView.setText(s);
+        //mTextView.setText(s);
     }
 
     @Override

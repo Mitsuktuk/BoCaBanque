@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="60" />
+                                                <entry key="scalingPercent" value="32" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,7 +34,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="7af6ae" />
+                                      <entry key="backgroundColor" value="c7ffd7" />
                                       <entry key="foregroundImage" value="D:\Documents\m.bochaton\Downloads\logo.png" />
                                     </map>
                                   </option>

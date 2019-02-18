@@ -10,11 +10,15 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface RequestService {
     @GET("restwebboca.comptebancaire")
     Call<List<CompteBancaire>> listComptes();
+
+    @PUT("restwebboca.comptebancaire/{id}")
+    Call<CompteBancaire> modifCompte(@Path("id") Long id, @Body CompteBancaire compteBancaire);
 
     @GET("restwebboca.utilisateur")
     Call<List<Utilisateur>> listUtilisateurs();

@@ -18,7 +18,9 @@ import com.example.mbochaton.bocabanque.models.CompteBancaire;
 import com.example.mbochaton.bocabanque.models.OperationBancaire;
 import com.example.mbochaton.bocabanque.services.RequestHelper;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,10 +102,10 @@ public class FragmentInterne extends Fragment {
             @Override
             public void onClick(View v) {
                 operationDebit = new OperationBancaire();
-                operationDebit.setDescription("-" + montant.getText().toString() + "€");
+                operationDebit.setDescription("Retrait");
 
                 operationCredit = new OperationBancaire();
-                operationCredit.setDescription("+" + montant.getText().toString() + "€");
+                operationCredit.setDescription("Dépôt");
 
                 RequestHelper.provideService().listOperations().enqueue(new Callback<List<OperationBancaire>>() {
                     @Override
@@ -141,20 +143,33 @@ public class FragmentInterne extends Fragment {
                             compteDeb = comptes.get(i);
                         }
                     }
+                    operationDebit.setMontant(-(Double.parseDouble(montant.getText().toString())));
                     operationDebit.setIdcompte(compteDeb.getId());
                     operationDebit.setId(maxId + 1000);
                     RequestHelper.provideService().createOperation(operationDebit).enqueue(new Callback<OperationBancaire>() {
                         @Override
                         public void onResponse(Call<OperationBancaire> call, Response<OperationBancaire> response) {
                             if(response.isSuccessful()) {
-                                loadCompteCred();
+                                double ancienSolde = compteDeb.getSolde();
+                                compteDeb.setSolde(ancienSolde - Double.parseDouble(montant.getText().toString()));
+
+                                RequestHelper.provideService().modifCompte(compteDeb.getId(), compteDeb).enqueue(new Callback<CompteBancaire>() {
+                                    @Override
+                                    public void onResponse(Call<CompteBancaire> call, Response<CompteBancaire> response) {
+                                        if(response.isSuccessful()) {
+                                            loadCompteCred();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<CompteBancaire> call, Throwable t) {  }
+                                });
                             } else {
                                 Toast.makeText(getActivity(), "Opération bancaire non créé", Toast.LENGTH_LONG).show();
                             }
                         }
                         @Override
                         public void onFailure(Call<OperationBancaire> call, Throwable t) {
-                            Toast.makeText(getActivity(), "Opération bancaire débit non créé", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Opération bancaire non créé", Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
@@ -183,18 +198,31 @@ public class FragmentInterne extends Fragment {
                     }
                     operationCredit.setIdcompte(compteCred.getId());
                     operationCredit.setId(maxId + 1001);
+                    operationCredit.setMontant(Double.parseDouble(montant.getText().toString()));
                     RequestHelper.provideService().createOperation(operationCredit).enqueue(new Callback<OperationBancaire>() {
                         @Override
                         public void onResponse(Call<OperationBancaire> call, Response<OperationBancaire> response) {
                             if(response.isSuccessful()) {
-                                Toast.makeText(getActivity(), "Transfert validé", Toast.LENGTH_LONG).show();
+                                double ancienSolde = compteCred.getSolde();
+                                compteCred.setSolde(ancienSolde + Double.parseDouble(montant.getText().toString()));
+
+                                RequestHelper.provideService().modifCompte(compteCred.getId(), compteCred).enqueue(new Callback<CompteBancaire>() {
+                                    @Override
+                                    public void onResponse(Call<CompteBancaire> call, Response<CompteBancaire> response) {
+                                        if(response.isSuccessful()) {
+                                            Toast.makeText(getActivity(), "Transfert validé", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<CompteBancaire> call, Throwable t) {  }
+                                });
                             } else {
-                                Toast.makeText(getActivity(), "Opération bancaire crédit non créé", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Opération bancaire non créé", Toast.LENGTH_LONG).show();
                             }
                         }
                         @Override
                         public void onFailure(Call<OperationBancaire> call, Throwable t) {
-                            Toast.makeText(getActivity(), "Opération bancaire crédit non créé", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Opération bancaire non créé", Toast.LENGTH_LONG).show();
                         }
                     });
 

@@ -19,13 +19,4 @@
         android:layout_gravity="center"
         android:layout_marginTop="220dp"/>
 
-    <TextView
-        android:id="@+id/txtMessagesReceived"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonAddMessage"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
-
-
 </LinearLayout>

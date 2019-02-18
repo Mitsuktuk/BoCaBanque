@@ -27,12 +27,6 @@
             android:textColor="@android:color/white"
             android:layout_margin="7dp"/>
 
-        <ImageView
-            android:id="@+id/refresh"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_autorenew"/>
-
     </LinearLayout>
 
     <LinearLayout

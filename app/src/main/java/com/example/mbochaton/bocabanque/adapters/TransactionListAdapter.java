@@ -12,7 +12,11 @@ import android.widget.TextView;
 import com.example.mbochaton.bocabanque.R;
 import com.example.mbochaton.bocabanque.models.OperationBancaire;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Comparator.comparing;
 
 public class TransactionListAdapter extends BaseAdapter {
     private Context mContext;
@@ -22,6 +26,7 @@ public class TransactionListAdapter extends BaseAdapter {
     public TransactionListAdapter(Context mContext, List<OperationBancaire> mOperationBancaireList) {
         this.mContext = mContext;
         this.mOperationBancaireList = mOperationBancaireList;
+        //Collections.sort(mOperationBancaireList, comparing(OperationBancaire::getDate).reversed());
     }
 
     @Override
@@ -48,11 +53,17 @@ public class TransactionListAdapter extends BaseAdapter {
         TextView tvDescription = (TextView)v.findViewById(R.id.tv_Description);
         TextView tvMontant = (TextView)v.findViewById(R.id.tv_Montant);
         ImageView ivIcone = (ImageView)v.findViewById(R.id.img);
-        tvDescription.setText(mOperationBancaireList.get(position).getDescription());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        tvDescription.setText(mOperationBancaireList.get(position).getDescription()/* + " - " + dateFormat.format(mOperationBancaireList.get(position).getDate())*/);
         tvMontant.setText(String.valueOf(montant) + "€");
 
         type = mOperationBancaireList.get(position).getType();
+
         switch(type){
+            case 0:
+                ivIcone.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_import_export));
+                ivIcone.setBackground(ContextCompat.getDrawable(mContext, R.drawable.cerclebackgroundgreen));
+                break;
             case 1:
                 ivIcone.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.supermarche));
                 ivIcone.setBackground(ContextCompat.getDrawable(mContext, R.drawable.cerclebackgroundyellow));

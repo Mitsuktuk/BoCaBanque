@@ -68,6 +68,8 @@ public class LoginActivity extends AppCompatActivity implements CardView.OnClick
                     Intent i = new Intent(this, HomeActivity.class);
                     i.putExtra("idUser", user.getId());
                     startActivity(i);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Identifiants invalides", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(LoginActivity.this, "Identifiants invalides", Toast.LENGTH_SHORT).show();

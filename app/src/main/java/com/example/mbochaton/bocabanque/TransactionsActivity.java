@@ -9,19 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mbochaton.bocabanque.adapters.CompteBancaireListAdapter;
-import com.example.mbochaton.bocabanque.adapters.TransactionListAdapter;
 import com.example.mbochaton.bocabanque.adapters.ViewPagerAdapter;
 import com.example.mbochaton.bocabanque.fragments.FragmentExterne;
 import com.example.mbochaton.bocabanque.fragments.FragmentInterne;
-import com.example.mbochaton.bocabanque.fragments.FragmentOperations;
-import com.example.mbochaton.bocabanque.fragments.FragmentStatistiques;
 import com.example.mbochaton.bocabanque.models.CompteBancaire;
-import com.example.mbochaton.bocabanque.models.OperationBancaire;
 import com.example.mbochaton.bocabanque.models.Utilisateur;
 import com.example.mbochaton.bocabanque.services.RequestHelper;
 
@@ -116,7 +110,7 @@ public class TransactionsActivity extends AppCompatActivity {
                     List<Utilisateur> utilisateurs = response.body();
                     for (int i = 0; i < utilisateurs.size(); i++) {
                         if(utilisateurs.get(i).getId() != idUser && !utilisateurs.get(i).getEmail().equals("admin")) {
-                            mUtilisateurList.add(utilisateurs.get(i).getPrenom() + " " + utilisateurs.get(i).getNom());
+                            mUtilisateurList.add(utilisateurs.get(i).getEmail());
                         }
                     }
                     tabs_adapter.addFragment(new FragmentInterne(mCompteBancaireList, idUser), "Internes");

@@ -99,7 +99,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                                 }
                                 Intent i = new Intent(NFCActivity.this, NFCRecevoir.class);
                                 i.putExtra("montant", montantDouble);
-                                i.putExtra("compteDebit", compteCredit);
+                                i.putExtra("compteCredit", compteCredit);
                                 startActivity(i);
                             }
                         });
@@ -113,7 +113,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                 break;
             case R.id.envoyer_card :
                 View  payerView = getLayoutInflater().inflate(R.layout.nfc_payer_dialog, null);
-                builder.setTitle("Demande de paiement");
+                builder.setTitle("Payer");
                 payerSpinner = (Spinner) payerView.findViewById(R.id.spinner_dialog);
                 loadComptes(1);
                 builder.setView(payerView);
@@ -121,7 +121,9 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                String compteDebit = payerSpinner.getSelectedItem().toString();
                                 Intent i = new Intent(NFCActivity.this, NFCEnvoyer.class);
+                                i.putExtra("compteDebit", compteDebit);
                                 startActivity(i);
                             }
                         });
@@ -162,7 +164,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                             demanderSpinner.setAdapter(demanderAdapter);
                             break;
                         case 1:
-                            ArrayAdapter<String> payerAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, android.R.id.text1);
+                            ArrayAdapter<String> payerAdapter = new ArrayAdapter<String>(NFCActivity.this, android.R.layout.simple_spinner_item, mCompteBancaireList);
                             payerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             payerSpinner.setAdapter(payerAdapter);
                             break;

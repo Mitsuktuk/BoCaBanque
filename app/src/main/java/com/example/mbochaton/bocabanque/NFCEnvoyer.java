@@ -18,11 +18,27 @@ import java.util.Locale;
 public class NFCEnvoyer extends AppCompatActivity {
     private NfcAdapter mNfcAdapter;
     private NdefMessage mNdefMessage;
+    private long idUser;
+    private String compteDebit;
 
     @Override
-    public void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfcenvoyer);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                idUser = 0;
+                compteDebit = "";
+            } else {
+                idUser = extras.getLong("idUser");
+                compteDebit = extras.getString("compteDebit");
+            }
+        } else {
+            idUser = (long) savedInstanceState.getSerializable("idUser");
+            compteDebit = (String) savedInstanceState.getSerializable("compteDebit");
+        }
 
         Toolbar tb = (Toolbar) findViewById(R.id.tb);
         setSupportActionBar(tb);
@@ -37,8 +53,7 @@ public class NFCEnvoyer extends AppCompatActivity {
         // create an NDEF message with two records of plain text type
         mNdefMessage = new NdefMessage(
                 new NdefRecord[] {
-                        createNewTextRecord("First sample NDEF text record", Locale.ENGLISH, true),
-                        createNewTextRecord("Second sample NDEF text record", Locale.ENGLISH, true) });
+                        createNewTextRecord(String.valueOf(idUser)+";"+compteDebit, Locale.ENGLISH, true)});
 
         mNfcAdapter.setNdefPushMessage(mNdefMessage, this);
     }

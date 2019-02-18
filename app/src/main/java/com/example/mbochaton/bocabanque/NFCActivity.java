@@ -100,6 +100,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                                 Intent i = new Intent(NFCActivity.this, NFCRecevoir.class);
                                 i.putExtra("montant", montantDouble);
                                 i.putExtra("compteCredit", compteCredit);
+                                i.putExtra("idUser", idUser);
                                 startActivity(i);
                             }
                         });
@@ -124,6 +125,7 @@ public class NFCActivity extends AppCompatActivity implements CardView.OnClickLi
                                 String compteDebit = payerSpinner.getSelectedItem().toString();
                                 Intent i = new Intent(NFCActivity.this, NFCEnvoyer.class);
                                 i.putExtra("compteDebit", compteDebit);
+                                i.putExtra("idUser", idUser);
                                 startActivity(i);
                             }
                         });

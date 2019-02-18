@@ -139,7 +139,6 @@ public class NFCRecevoir extends AppCompatActivity {
         userPId = Long.parseLong(parts[0]);
         compteDeb = parts[1];
 
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
         loadUtilisateur();
     }
 
